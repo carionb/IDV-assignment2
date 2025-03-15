@@ -35,7 +35,7 @@
             text-align: center;
             font-size: 3.5rem;
             color: var(--primary);
-            margin: 2rem 0;
+            margin: 1rem 0;
             width: 100%;
             text-shadow: 2px 2px 4px rgba(0,86,179,0.2);
             letter-spacing: 1.5px;
@@ -120,6 +120,7 @@
             width: 250px;
             position: relative;
             top: 0;
+            font-size: 1.1rem;
         }
 
         .trigger-btn {
@@ -290,7 +291,7 @@
                 <div class="chart-wrapper">
                     <img src="https://lovelytics.com/wp-content/uploads/2022/08/6-Design-Tips_1.png" 
                          alt="Poor Dashboard Design"
-                         style="width:660px; height:auto;">
+                         style="width:100%; height:auto; object-fit: contain;">
                     <div class="source-note">
                         Source: <a href="https://lovelytics.com/6-design-tips-for-better-business-dashboards-in-tableau/" target="_blank">Lovelytics</a>
                     </div>
@@ -351,8 +352,8 @@
         const errorConfigs = {
             example1: [
                 { num: 1, desc: "Too many colors (10 distinct hues)" },
-                { num: 2, desc: "Overlapping bars affect readability" },
-                { num: 3, desc: "Poor temporal grouping" }
+                { num: 2, desc: "Too dense bars affect readability" },
+                { num: 3, desc: "Too difficult to observe long-term trends" }
             ],
             example2: [
                 { num: 1, desc: "Visual clutter with unnecessary elements" },
