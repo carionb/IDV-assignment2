@@ -76,7 +76,6 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            position: relative
         }
 
         .error-marker {
@@ -85,11 +84,7 @@
             background: var(--primary);
             color: white;
             border-radius: 50%;
-            display: none;
-            position: absolute;
-            left: 120%;
-            top: 0;
-            z-index: 10;
+            display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
@@ -117,8 +112,8 @@
             background: var(--secondary);
             color: white;
             border: none;
-            padding: 0.3rem 0.5rem;
-            border-radius: 10px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
             cursor: pointer;
             margin-top: 1rem;
             transition: opacity 0.2s;
@@ -126,11 +121,10 @@
 
         .analysis-section {
             background: white;
-            padding-top: 2.5rem;
+            padding: 2rem;
             border-radius: 12px;
-            margin: 3rem 0;
+            margin: 2rem 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-top: 2px solid #f0f0f0;
         }
 
         .good-example {
@@ -138,15 +132,13 @@
             background: white;
             border-radius: 12px;
             padding: 2rem;
-            margin-top: 3rem;
-            border-top: 2px solid #f0f0f0;
-            padding-top: 2.5rem;
+            margin-top: 2rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
-        .example2 .chart-container {
-            grid-template-columns: 660px 250px;
-            gap: 1rem;
+        example2 .chart-container {
+           grid-template-columns: 660px 250px;
+           gap: 1rem;
         }
 
         .toggle-good {
@@ -170,41 +162,40 @@
             color: #666;
             width: 100%;
         }
-
-        .image-comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        .image-wrapper {
-            border: 1px solid #ddd;
-            padding: 1rem;
-            border-radius: 8px;
-        }
-        .image-caption {
-            text-align: center;
-            color: #666;
-            margin-top: 1rem;
-            font-size: 0.9em;
-        }
-
-        .improvement-steps {
+        
+        /* 固定图表和错误面板布局 */
+.chart-container {
     display: grid;
-    gap: 2rem;
-    margin-top: 2rem;
+    grid-template-columns: 660px 300px;
+    gap: 1.5rem;
+    align-items: start;
 }
-.step {
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-radius: 8px;
+
+/* 错误描述定位优化 */
+.error-item {
+    position: relative;
 }
-.step img {
-    width: 100%;
-    max-width: 600px;
-    margin-top: 1rem;
-    border: 1px solid #ddd;
+.error-desc {
+    position: absolute;
+    left: 120%;
+    top: 0;
+    width: 280px;
+    z-index: 10;
+    display: none;
 }
+
+/* 增加模块间距 */
+.analysis-section {
+    margin: 3rem 0;
+    border-top: 2px solid #f0f0f0;
+    padding-top: 2.5rem;
+}
+.good-example {
+    margin-top: 3rem;
+    border-top: 2px solid #f0f0f0;
+    padding-top: 2.5rem;
+}
+
         
     </style>
 </head>
@@ -230,12 +221,12 @@
                 <div class="error-panel">
                     <div class="error-item">
                         <div class="error-marker" 
-                             onmouseover="showTooltip(event, 'Too many colors (12 distinct hues) make it difficult to track individual months')"
+                             onmouseover="showTooltip(event, 'Too many colors (10 distinct hues) make it difficult to track individual months')"
                              onmouseout="hideTooltip()">1</div>
                     </div>
                     <div class="error-item">
                         <div class="error-marker" 
-                             onmouseover="showTooltip(event, 'Overlapping bars obscure data, making comparisons hard')"
+                             onmouseover="showTooltip(event, 'The data points are too dense, which affects readability')"
                              onmouseout="hideTooltip()">2</div>
                     </div>
                     <div class="error-item">
@@ -262,7 +253,9 @@
                     </div>
                     <div>
                         <h4>How (Visualization Method)</h4>
-                        <p>还不知道.</p>
+                        <p>· Consider using a line chart instead of a bar chart, with one line for each year and using fewer colors to make the trend clearer
+                           · Reduce the number of data points appropriately, and only show data points for January and July each year to highlight seasonal changes
+                           · Add trend lines, such as a 10-year rolling average, to help viewers understand long-term climate change trends</p>
                     </div>
                 </div>
             </div>
@@ -273,7 +266,7 @@
 
             <div class="good-example" id="good1">
                 <h3>Improved Temperature Visualization</h3>
-                  <img src="https://lovelytics.com/wp-content/uploads/2022/08/6-Design-Tips_2-1024x788.png" 
+                  <img src="https://github.com/carionb/IDV-assignment2/blob/main/GOOD1.png" 
                  alt="Improved Dashboard Design"
                  style="width:100%; max-width:800px;">
         </div>
