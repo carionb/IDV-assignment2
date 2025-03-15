@@ -113,8 +113,8 @@
             background: var(--secondary);
             color: white;
             border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
+            padding: 0.6rem 0.6rem;
+            border-radius: 15px;
             cursor: pointer;
             margin-top: 1rem;
             transition: opacity 0.2s;
@@ -158,41 +158,6 @@
             color: #666;
             width: 100%;
         }
-
-        .image-comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        .image-wrapper {
-            border: 1px solid #ddd;
-            padding: 1rem;
-            border-radius: 8px;
-        }
-        .image-caption {
-            text-align: center;
-            color: #666;
-            margin-top: 1rem;
-            font-size: 0.9em;
-        }
-
-        .improvement-steps {
-    display: grid;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-.step {
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-.step img {
-    width: 100%;
-    max-width: 600px;
-    margin-top: 1rem;
-    border: 1px solid #ddd;
-}
 
         /* 固定图表和错误面板布局 */
 .chart-container {
@@ -378,6 +343,39 @@
     <div id="tooltip" class="error-tooltip"></div>
 
     <script>
+        
+    <div id="tooltip" class="error-tooltip"></div>
+
+    <script>
+        // Tooltip Functions
+        function showTooltip(event, text) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = text;
+            tooltip.style.opacity = '1';
+            tooltip.style.left = `${event.pageX + 15}px`;
+            tooltip.style.top = `${event.pageY + 15}px`;
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').style.opacity = '0';
+        }
+
+        // Scroll to Analysis
+        function scrollToAnalysis(id) {
+            document.getElementById(id).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Toggle Good Examples
+        function toggleGoodExample(id, button) {
+            const example = document.getElementById(id);
+            example.style.display = example.style.display === 'block' ? 'none' : 'block';
+            button.textContent = example.style.display === 'block' 
+                ? 'Hide Improved Visualization' 
+                : 'Show Improved Visualization';
+        }
     </script>
 </body>
 </html>
