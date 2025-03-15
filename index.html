@@ -8,7 +8,8 @@
     <style>
         :root {
             --primary: #0056b3;
-            --secondary: #0073e6;
+            --secondary: #e74c3c;
+            --accent: #3498db;
             --background: #f4f4f4;
             --text: #333;
         }
@@ -82,84 +83,6 @@
             text-align: right;
         }
 
-        .error-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            min-width: 280px;
-        }
-
-        .error-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            cursor: pointer;
-            position: relative;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .error-item:hover {
-            background: #f8f9fa;
-        }
-
-        .error-marker {
-            width: 36px;
-            height: 36px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-
-        .error-desc {
-            display: none;
-            position: absolute;
-            left: calc(100% + 1rem);
-            top: 0;
-            width: 280px;
-            background: white;
-            padding: 1.2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-
-        .improve-btn {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 1.5rem;
-            transition: opacity 0.2s;
-            align-self: flex-start;
-        }
-
-        .analysis-section {
-            background: #fafcff;
-            padding: 2.5rem;
-            border-radius: 12px;
-            margin: 3rem 0;
-            border-top: 3px solid var(--primary);
-        }
-
-        .good-example {
-            display: none;
-            background: white;
-            border-radius: 12px;
-            padding: 2.5rem;
-            margin-top: 3rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border: 2px solid var(--primary);
-        }
-
         .toggle-good {
             background: var(--secondary);
             color: white;
@@ -179,12 +102,129 @@
             width: 100%;
             margin-top: 4rem;
         }
+
+         .issue-flow {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .example-card {
+            position: relative;
+            padding-right: 380px; /* 为错误面板留出空间 */
+        }
+
+        .issue-flow {
+            position: absolute;
+            top: 100px;
+            right: 30px;
+            width: 320px;
+            z-index: 100;
+        }
+
+        .trigger-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(231,76,60,0.3);
+            transition: all 0.3s;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .error-steps {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .error-item {
+            display: none;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transform: translateX(20px);
+            opacity: 0;
+            animation: slideIn 0.4s forwards;
+        }
+
+        @keyframes slideIn {
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .error-marker {
+            width: 28px;
+            height: 28px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+
+        .improve-flow-btn {
+            background: #0056b3;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+
+        /* 优化现有样式 */
+        .good-example {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .good-example.active {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 1000px;
+        }
+
+        .analysis-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s;
+        }
+
+        .analysis-section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
     </style>
 </head>
 <body>
-    <h1 class="main-title">Data Visualization Critique</h1>
+      <h1 class="main-title">Data Visualization Critique</h1>
 
     <div class="container">
+        <!-- Example 1 -->
+        <div class="example-card">
+            <div class="issue-flow">
+                <button class="trigger-btn" onclick="showNextError('example1')">Any issue? 👆</button>
+                <div class="error-steps" id="example1-steps"></div>
+            </div>
+
         <!-- Example 1 -->
         <div class="example-card">
             <h2>Example 1: UK Temperature Data</h2>
@@ -227,19 +267,17 @@
                 <div class="what-why-how">
                     <div>
                         <h4>What (Data)</h4>
-                        <p>Monthly average temperature records from 2015 to 2024 across 12 UK regions, showing seasonal variations and regional differences.</p>
+                        <p>The dataset represents monthly average daily temperatures in the United Kingdom (UK) from January 2015 to November 2024.</p>
                     </div>
                     <div>
                         <h4>Why (Task)</h4>
-                        <p>Enable comparison of temperature patterns across years and regions, identify climate trends, and detect anomalous seasons.</p>
+                        <p>The primary objective is to analyze long-term temperature trends and seasonal variations in the UK.</p>
                     </div>
                     <div>
                         <h4>How (Idiom)</h4>
-                        <p>· Consider using a line chart instead of a bar chart, with one line for each year and using fewer colors to make the trend clearer
-                            
-                           · Reduce the number of data points appropriately, and only show data points for January and July each year to highlight seasonal changes
-                            
-                           · Add trend lines, such as a 10-year rolling average, to help viewers understand long-term climate change trends</p>
+                        <p>"A pattern emerges" → Clear seasonal trends across years.</p>
+                        <p>"Compare apples to apples" → Colors help year-over-year comparison.</p>  
+                        <p>"Seeing is believing" → Visual cues highlight fluctuations instantly.</p>
                     </div>
                 </div>
             </div>
@@ -250,14 +288,19 @@
 
             <div class="good-example" id="good1">
                 <h3>Improved Temperature Visualization</h3>
-                <img src="placeholder-good-chart.jpg" 
+                <img src="https://raw.githubusercontent.com/carionb/IDV-assignment2/refs/heads/main/GOOD2.png" 
                      alt="Improved Temperature Chart"
                      style="width:100%; max-width:800px; height:auto;">
             </div>
         </div>
 
         <!-- Example 2 -->
-        <div class="example-card">
+         <div class="example-card">
+            <div class="issue-flow">
+                <button class="trigger-btn" onclick="showNextError('example2')">Any issue? 👆</button>
+                <div class="error-steps" id="example2-steps"></div>
+            </div>
+             
             <h2>Example 2: Tableau Dashboard Design</h2>
             
             <div class="chart-container">
@@ -339,23 +382,6 @@
     </footer>
 
     <script>
-        // Error Description Toggle
-        function toggleError(num) {
-            const errorItem = event.currentTarget;
-            const desc = errorItem.querySelector('.error-desc');
-            
-            // Toggle current description
-            const isVisible = desc.style.display === 'block';
-            desc.style.display = isVisible ? 'none' : 'block';
-            
-            // Close other descriptions
-            document.querySelectorAll('.error-item').forEach(item => {
-                if(item !== errorItem) {
-                    item.querySelector('.error-desc').style.display = 'none';
-                }
-            });
-        }
-
         // Smooth Scroll to Analysis
         function scrollToAnalysis(id) {
             document.getElementById(id).scrollIntoView({
@@ -364,14 +390,72 @@
             });
         }
 
-        // Toggle Good Example
+         // 为每个示例维护独立的状态
+        const exampleStates = {
+            example1: { currentStep: 0 },
+            example2: { currentStep: 0 }
+        };
+
+        const errorConfigs = {
+            example1: [
+                { num: 1, desc: "Too many colors (10 distinct hues)" },
+                { num: 2, desc: "Overlapping bars affect readability" },
+                { num: 3, desc: "Poor temporal grouping" }
+            ],
+            example2: [
+                { num: 1, desc: "Visual clutter with unnecessary elements" },
+                { num: 2, desc: "Inconsistent color usage" },
+                { num: 3, desc: "Poor alignment and spacing" }
+            ]
+        };
+
+        function showNextError(exampleId) {
+            const state = exampleStates[exampleId];
+            const container = document.getElementById(`${exampleId}-steps`);
+            
+            if(state.currentStep < errorConfigs[exampleId].length) {
+                const errorItem = document.createElement('div');
+                errorItem.className = 'error-item';
+                errorItem.innerHTML = `
+                    <span class="error-marker">${errorConfigs[exampleId][state.currentStep].num}</span>
+                    <span>${errorConfigs[exampleId][state.currentStep].desc}</span>
+                `;
+                container.appendChild(errorItem);
+                container.style.display = 'block';
+                errorItem.style.display = 'block';
+                state.currentStep++;
+                
+                if(state.currentStep === errorConfigs[exampleId].length) {
+                    const improveBtn = document.createElement('button');
+                    improveBtn.className = 'improve-flow-btn';
+                    improveBtn.textContent = 'How to Improve →';
+                    improveBtn.onclick = () => {
+                        const analysisSection = document.getElementById(`analysis${exampleId.slice(-1)}`);
+                        analysisSection.classList.add('active');
+                        analysisSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    };
+                    container.appendChild(improveBtn);
+                    improveBtn.style.display = 'block';
+                }
+            }
+        }
+
         function toggleGoodExample(id, button) {
             const example = document.getElementById(id);
-            const isVisible = example.style.display === 'block';
-            example.style.display = isVisible ? 'none' : 'block';
-            button.textContent = isVisible 
-                ? 'Show Improved Visualization' 
-                : 'Hide Improved Visualization';
+            example.classList.toggle('active');
+            if(example.classList.contains('active')) {
+                example.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            }
+            button.textContent = example.classList.contains('active') 
+                ? 'Hide Improved Visualization' 
+                : 'Show Improved Visualization';
         }
     </script>
 </body>
