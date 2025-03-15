@@ -81,12 +81,12 @@
         }
        
         .chart-wrapper img {
-    width: 100%;
-    height: auto;
-    max-width: 660px;
-    display: block;
-    margin: 0 auto;
-}
+           width: 100%;
+           height: auto;
+           max-width: 660px;
+           display: block;
+           margin: 0 auto;
+        }
 
 
         .source-note {
@@ -207,6 +207,12 @@
         }
 
         .analysis-section {
+             display: none;
+             opacity: 0;
+             transition: opacity 0.6s ease-in-out;
+        }
+
+        .analysis-section.active {
             margin-top: 3rem;
             padding: 2rem;
             border-radius: 10px;
@@ -216,11 +222,6 @@
             transform: translateY(20px);
             transition: all 0.6s;
             margin: 3rem 0;
-        }
-
-        .analysis-section.active {
-            opacity: 1;
-            transform: translateY(0);
         }
 
     </style>
@@ -413,6 +414,10 @@
         button.style.marginTop = "1rem";
     } else {
         button.style.marginTop = "0"; // 紧贴bad example
+    }
+    // 如果 `good example` 被展开，平滑滚动到它的显示区域
+    if (example.classList.contains('active')) {
+        example.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 }
     </script>
