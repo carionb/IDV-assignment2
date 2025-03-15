@@ -6,7 +6,7 @@
     <title>Data Visualization Critique</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
-        :root {
+          :root {
             --primary: #0056b3;
             --secondary: #0073e6;
             --background: #f4f4f4;
@@ -48,6 +48,7 @@
     margin: 0.5rem auto;
 }
 
+
         .example-card {
             background: white;
             border-radius: 12px;
@@ -59,11 +60,11 @@
         }
 
         .chart-container {
-    display: grid;
-    grid-template-columns: 660px 300px;
-    gap: 1.5rem;
-    align-items: start;
-}
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
 
         .error-panel {
             display: flex;
@@ -73,16 +74,10 @@
         }
 
         .error-item {
-    position: relative;
-}
-.error-desc {
-    position: absolute;
-    left: 120%;
-    top: 0;
-    width: 280px;
-    z-index: 10;
-    display: none;
-}
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
 
         .error-marker {
             width: 32px;
@@ -126,21 +121,22 @@
         }
 
         .analysis-section {
-    margin: 3rem 0;
-    border-top: 2px solid #f0f0f0;
-    padding-top: 2.5rem;
-}
-.good-example {
-    margin-top: 3rem;
-    border-top: 2px solid #f0f0f0;
-    padding-top: 2.5rem;
-}
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
 
-#example2 .chart-container {
-    grid-template-columns: 660px 250px;
-    gap: 1rem;
-}
-        
+        .good-example {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
         .toggle-good {
             background: var(--secondary);
             color: white;
@@ -162,7 +158,18 @@
             color: #666;
             width: 100%;
         }
-      
+
+        .image-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .image-wrapper {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 8px;
+        }
         .image-caption {
             text-align: center;
             color: #666;
@@ -170,8 +177,62 @@
             font-size: 0.9em;
         }
 
- 
+        .improvement-steps {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.step {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.step img {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 1rem;
+    border: 1px solid #ddd;
+}
 
+        /* 固定图表和错误面板布局 */
+.chart-container {
+    display: grid;
+    grid-template-columns: 660px 300px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* 错误描述定位优化 */
+.error-item {
+    position: relative;
+}
+.error-desc {
+    position: absolute;
+    left: 120%;
+    top: 0;
+    width: 280px;
+    z-index: 10;
+    display: none;
+}
+
+/* 增加模块间距 */
+.analysis-section {
+    margin: 3rem 0;
+    border-top: 2px solid #f0f0f0;
+    padding-top: 2.5rem;
+}
+.good-example {
+    margin-top: 3rem;
+    border-top: 2px solid #f0f0f0;
+    padding-top: 2.5rem;
+}
+
+/* Example2布局优化 */
+#example2 .chart-container {
+    grid-template-columns: 660px 250px;
+    gap: 1rem;
+}
+        
     </style>
 </head>
 <body>
