@@ -185,6 +185,9 @@
             width: 100%;
             transition: transform 0.3s;
         }
+        .improve-flow-btn:hover {
+            background: #004494;
+        }
 
         /* 优化现有样式 */
         .good-example {
@@ -411,6 +414,33 @@
         example.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 }
+    function toggleAnalysis(id) {
+    const analysis = document.getElementById(id);
+    const toggleButton = document.getElementById("toggle-analysis-btn");
+
+    if (analysis.classList.contains("active")) {
+        // 隐藏分析框
+        analysis.classList.remove("active");
+        toggleButton.textContent = "How to Improve →"; // 切换回 "How to Improve"
+    } else {
+        // 显示分析框
+        analysis.classList.add("active");
+        toggleButton.textContent = "Hide Analysis"; // 切换为 "Hide Analysis"
+        analysis.scrollIntoView({ behavior: "smooth", block: "start" }); // 平滑滚动
+    }
+}  
+     function toggleIssues(id) {
+            const issueContainer = document.getElementById(id);
+            const toggleButton = document.getElementById("toggle-issue-btn");
+
+            if (issueContainer.classList.contains("active")) {
+                issueContainer.classList.remove("active");
+                toggleButton.textContent = "Any issue? 👆";
+            } else {
+                issueContainer.classList.add("active");
+                toggleButton.textContent = "Hide Issues";
+            }
+        }
     </script>
 </body>
 </html>
