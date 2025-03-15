@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization Critique</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #0073e6;
+            --background: #f4f4f4;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .main-title {
+            text-align: center;
+            color: var(--primary);
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 2rem auto;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .error-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-width: 120px;
+        }
+
+        .error-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .error-marker {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .error-marker:hover {
+            transform: scale(1.1);
+        }
+
+        .error-tooltip {
+            position: absolute;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 300px;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .improve-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .analysis-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .good-example {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .toggle-good {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 1rem 0;
+            transition: opacity 0.2s;
+        }
+
+        .toggle-good:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            width: 100%;
+        }
+
+        .image-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .image-wrapper {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .image-caption {
+            text-align: center;
+            color: #666;
+            margin-top: 1rem;
+            font-size: 0.9em;
+        }
+
+        .improvement-steps {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.step {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.step img {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 1rem;
+    border: 1px solid #ddd;
+}
+    </style>
+</head>
+<body>
+    <h1 class="main-title">Data Visualization Critique</h1>
+
+    <div class="container">
+        <!-- Example 1 -->
+        <div class="example-card">
+            <h2>Example 1: UK Temperature Data</h2>
+            
+            <div class="chart-container">
+                <a href="https://www.statista.com/statistics/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk/" rel="nofollow"><img src="https://www.statista.com/graphic/1/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk.jpg" alt="Statistic: Monthly average daily temperatures in the United Kingdom (UK) from January 2015 to November 2024 (in degrees Celsius) | Statista" style="width: 100%; height: auto !important; max-width:1000px;-ms-interpolation-mode: bicubic;"/></a><br />Find more statistics at  <a href="https://www.statista.com" rel="nofollow">Statista</a>
+                
+                <div class="error-panel">
+                    <div class="error-item">
+                        <div class="error-marker" 
+                             onmouseover="showTooltip(event, 'Too many colors (12 distinct hues) make it difficult to track individual months')"
+                             onmouseout="hideTooltip()">1</div>
+                    </div>
+                    <div class="error-item">
+                        <div class="error-marker" 
+                             onmouseover="showTooltip(event, 'Overlapping bars obscure data, making comparisons hard')"
+                             onmouseout="hideTooltip()">2</div>
+                    </div>
+                    <div class="error-item">
+                        <div class="error-marker" 
+                             onmouseover="showTooltip(event, 'Poor grouping makes it difficult to analyze year-over-year trends')"
+                             onmouseout="hideTooltip()">3</div>
+                    </div>
+                    <button class="improve-btn" onclick="scrollToAnalysis('analysis1')">
+                        How to Improve?
+                    </button>
+                </div>
+            </div>
+
+            <div class="analysis-section" id="analysis1">
+                <h3>What - Why - How Analysis</h3>
+                <div class="what-why-how">
+                    <div>
+                        <h4>What (Data Content)</h4>
+                        <p>Monthly average temperature records from 2015 to 2024 across 12 UK regions, showing seasonal variations and regional differences.</p>
+                    </div>
+                    <div>
+                        <h4>Why (Analytical Purpose)</h4>
+                        <p>Enable comparison of temperature patterns across years and regions, identify climate trends, and detect anomalous seasons.</p>
+                    </div>
+                    <div>
+                        <h4>How (Visualization Method)</h4>
+                        <p>？column chart with redundant color encoding and perspective distortion that hinders accurate data interpretation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="toggle-good" onclick="toggleGoodExample('good1', this)">
+                Show Improved Visualization
+            </button>
+
+            <div class="good-example" id="good1">
+                <h3>Improved Temperature Visualization</h3>
+                <svg id="goodChart1" width="100%" height="400"></svg>
+            </div>
+        </div>
+
+         <!-- Example 2 -->
+    <div class="example-card">
+        <h2>Example 2: Tableau Dashboard Design</h2>
+        
+        <div class="chart-container">
+            <div style="position:relative">
+                <img src="https://lovelytics.com/wp-content/uploads/2022/08/6-Design-Tips_1.png" 
+                     alt="Poor Dashboard Design"
+                     style="width:660px; height:auto; max-width:100%">
+                <div class="source-link">
+                    Source: <a href="https://lovelytics.com/6-design-tips-for-better-business-dashboards-in-tableau/" target="_blank">Lovelytics</a>
+                </div>
+            </div>
+            <div class="error-panel">
+                <div class="error-item">
+                    <div class="error-marker" 
+                         onmouseover="showTooltip(event, 'Excessive visual clutter: Unnecessary borders, gridlines and decimal points')"
+                         onmouseout="hideTooltip()">1</div>
+                </div>
+                <div class="error-item">
+                    <div class="error-marker" 
+                         onmouseover="showTooltip(event, 'Poor color strategy: Random color usage without brand alignment')"
+                         onmouseout="hideTooltip()">2</div>
+                </div>
+                <div class="error-item">
+                    <div class="error-marker" 
+                         onmouseover="showTooltip(event, 'Inconsistent formatting: Mixed font sizes and alignment issues')"
+                         onmouseout="hideTooltip()">3</div>
+                </div>
+                <button class="improve-btn" onclick="scrollToAnalysis('analysis2')">
+                    How to Improve?
+                </button>
+            </div>
+        </div>
+
+        <div class="analysis-section" id="analysis2">
+            <h3>What - Why - How Analysis</h3>
+            <div class="what-why-how">
+                <div>
+                    <h4>What (Data Content)</h4>
+                    <p>Sales performance dashboard with customer metrics and product category trends.</p>
+                </div>
+                <div>
+                    <h4>Why (Purpose)</h4>
+                    <p>Provide quick performance insights and identify growth opportunities.</p>
+                </div>
+                <div>
+                    <h4>How (Visualization)</h4>
+                    <p>Overloaded dashboard with inconsistent formatting and poor information hierarchy.</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="toggle-good" onclick="toggleGoodExample('good2', this)">
+            Show Improved Visualization
+        </button>
+
+        <div class="good-example" id="good2">
+            <h3>Improved Dashboard Design</h3>
+            <img src="https://lovelytics.com/wp-content/uploads/2022/08/6-Design-Tips_2-1024x788.png" 
+                 alt="Improved Dashboard Design"
+                 style="width:100%; max-width:800px;">
+        </div>
+    </div>
+</div>
+    <footer>
+        Baorong Li 1009456
+    </footer>
+
+    <div id="tooltip" class="error-tooltip"></div>
+
+    <script>
+        // Tooltip Functions
+        function showTooltip(event, text) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = text;
+            tooltip.style.opacity = '1';
+            tooltip.style.left = `${event.pageX + 15}px`;
+            tooltip.style.top = `${event.pageY + 15}px`;
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').style.opacity = '0';
+        }
+
+        // Scroll to Analysis
+        function scrollToAnalysis(id) {
+            document.getElementById(id).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Toggle Good Examples
+        function toggleGoodExample(id, button) {
+            const example = document.getElementById(id);
+            example.style.display = example.style.display === 'block' ? 'none' : 'block';
+            button.textContent = example.style.display === 'block' 
+                ? 'Hide Improved Visualization' 
+                : 'Show Improved Visualization';
+        }
+
+        // D3 Visualization Framework - Example 1
+        function initTemperatureChart() {
+            const svg = d3.select("#goodChart1");
+            const width = svg.node().getBoundingClientRect().width;
+            const height = 400;
+            const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+
+            // Sample data structure
+            const dataset = [
+                { year: 2006, temp: 10.2 },
+                { year: 2007, temp: 10.5 },
+                { year: 2008, temp: 10.1 },
+                { year: 2009, temp: 10.8 },
+                { year: 2010, temp: 10.4 },
+                { year: 2011, temp: 10.9 },
+                { year: 2012, temp: 11.1 },
+                { year: 2013, temp: 11.3 },
+                { year: 2014, temp: 11.0 },
+                { year: 2015, temp: 11.4 }
+            ];
+
+            // Create scales
+            const xScale = d3.scaleLinear()
+                .domain(d3.extent(dataset, d => d.year))
+                .range([margin.left, width - margin.right]);
+
+            const yScale = d3.scaleLinear()
+                .domain([9.5, d3.max(dataset, d => d.temp) + 0.5])
+                .range([height - margin.bottom, margin.top]);
+
+            // Create axes
+            const xAxis = d3.axisBottom(xScale)
+                .tickFormat(d3.format("d"))
+                .tickSizeOuter(0);
+
+            const yAxis = d3.axisLeft(yScale)
+                .tickSizeOuter(0);
+
+            // Draw axes
+            svg.append("g")
+                .attr("transform", `translate(0,${height - margin.bottom})`)
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(yAxis);
+
+            // Create line generator
+            const line = d3.line()
+                .x(d => xScale(d.year))
+                .y(d => yScale(d.temp));
+
+            // Draw line
+            svg.append("path")
+                .datum(dataset)
+                .attr("fill", "none")
+                .attr("stroke", "#0073e6")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            // Add points
+            svg.selectAll(".point")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr("cx", d => xScale(d.year))
+                .attr("cy", d => yScale(d.temp))
+                .attr("r", 4)
+                .attr("fill", "#0073e6");
+        }
+
+        // Initialize charts when DOM loads
+        document.addEventListener('DOMContentLoaded', initTemperatureChart);
+    </script>
+</body>
+</html>
