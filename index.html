@@ -52,27 +52,27 @@
         }
 
         .example-card {
-    position: relative;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    margin: 3rem auto;
-    padding: 2rem;
-    width: 100%;
-    max-width: 1000px;
-    display: grid; /* 新增网格布局 */
-    grid-template-columns: 1fr;
-    gap: 2rem;
-}
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 3rem auto;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 1000px;
+        }
 
+        /* 调整 chart-container，使内容左右对齐 */
         .chart-container {
-            display: grid;
-            grid-template-columns: minmax(660px, 1fr) 320px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
             gap: 2rem;
-            align-items: start;
+            width: 100%;
         }
 
         .chart-wrapper {
+            flex: 1;
+            max-width: 700px;
             background: white;
             border: 1px solid #eee;
             border-radius: 12px;
@@ -117,14 +117,10 @@
         }
 
         .issue-flow {
-    position: sticky;
-    top: 2rem;
-    right: auto;
-    margin: 0;
-    height: fit-content;
-    background: white;
-    z-index: 100;
-}
+            width: 250px;
+            position: relative;
+            top: 0;
+        }
 
         .trigger-btn {
             background: #e74c3c;
@@ -233,29 +229,27 @@
 
     <div class="container">
         <!-- Example 1 -->
-        <div class="example-card">
-            <div class="issue-flow">
-                <button class="trigger-btn" onclick="showNextError('example1')">Any issue? 👆</button>
-                <div class="error-steps" id="example1-steps"></div>
-            </div>
-
-        <!-- Example 1 -->
-        <div class="example-card">
+       <div class="example-card">
             <h2>Example 1: UK Temperature Data</h2>
             
             <div class="chart-container">
-        <div class="chart-wrapper">
-            <a href="https://www.statista.com/statistics/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk/" rel="nofollow">
-                <img src="https://www.statista.com/graphic/1/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk.jpg" 
-                     alt="Temperature Chart"
-                     style="width:660px; height:400px; object-fit: contain;">
-            </a>
-            <div class="source-note">
-                Source: <a href="https://www.statista.com" target="_blank">Statista</a>
+                <div class="chart-wrapper">
+                    <a href="https://www.statista.com/statistics/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk/" rel="nofollow">
+                        <img src="https://www.statista.com/graphic/1/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk.jpg" 
+                             alt="Temperature Chart"
+                             style="width:100%; height:auto; object-fit: contain;">
+                    </a>
+                    <div class="source-note">
+                        Source: <a href="https://www.statista.com" target="_blank">Statista</a>
+                    </div>
+                </div>
+
+                <div class="issue-flow">
+                    <button class="trigger-btn" onclick="showNextError('example1')">Any issue? 👆</button>
+                    <div class="error-steps" id="example1-steps"></div>
+                </div>
             </div>
-        </div>
-    </div>
-    
+           
             <div class="analysis-section" id="analysis1">
                 <h3>What - Why - How Analysis</h3>
                 <div class="what-why-how">
@@ -290,13 +284,8 @@
 
         <!-- Example 2 -->
          <div class="example-card">
-            <div class="issue-flow">
-                <button class="trigger-btn" onclick="showNextError('example2')">Any issue? 👆</button>
-                <div class="error-steps" id="example2-steps"></div>
-            </div>
-             
             <h2>Example 2: Tableau Dashboard Design</h2>
-            
+        
             <div class="chart-container">
                 <div class="chart-wrapper">
                     <img src="https://lovelytics.com/wp-content/uploads/2022/08/6-Design-Tips_1.png" 
@@ -306,6 +295,10 @@
                         Source: <a href="https://lovelytics.com/6-design-tips-for-better-business-dashboards-in-tableau/" target="_blank">Lovelytics</a>
                     </div>
                 </div>
+                 <div class="issue-flow">
+                <button class="trigger-btn" onclick="showNextError('example2')">Any issue? 👆</button>
+                <div class="error-steps" id="example2-steps"></div>
+            </div>
             </div>
 
             <div class="analysis-section" id="analysis2">
