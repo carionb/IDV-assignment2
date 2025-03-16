@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization Critique</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --background: #f4f4f4;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin: 0rem 0;
+            width: 100%;
+            text-shadow: 2px 2px 4px rgba(0,86,179,0.2);
+            letter-spacing: 1.5px;
+            position: relative;
+        }
+
+        .main-title::after {
+            content: '';
+            display: block;
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            margin: 1rem auto;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 1rem auto;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .chart-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .chart-wrapper {
+            flex: 1;
+            max-width: 700px;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .chart-wrapper img {
+            width: 100%;
+            height: auto;
+            max-width: 660px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .chart-wrapper img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .source-note {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 1rem;
+            text-align: right;
+        }
+
+        .toggle-good {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 1.5rem 0;
+            transition: transform 0.2s;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            width: 100%;
+            margin-top: 4rem;
+        }
+
+        .issue-flow {
+            width: 250px;
+            position: relative;
+            top: 0;
+            font-size: 0.9rem;
+        }
+
+        .trigger-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(231,76,60,0.3);
+            transition: all 0.3s;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .error-steps {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .error-steps.active {
+            display: block;
+        }
+
+        .error-item {
+            display: none;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transform: translateX(20px);
+            opacity: 0;
+            animation: slideIn 0.4s forwards;
+        }
+
+        @keyframes slideIn {
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .error-marker {
+            width: 28px;
+            height: 28px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+
+        .improve-flow-btn {
+            background: #0056b3;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+
+        .good-example {
+            margin-top: 3rem;
+            padding: 2rem;
+            border-radius: 10px;
+            background: #f9f9f9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .good-example.active {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 1500px;
+        }
+
+        /* 新增分析框样式 */
+        .analysis-section {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+            background: white;
+            border-radius: 12px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .analysis-section.active {
+            max-height: 1000px;
+            opacity: 1;
+            transform: translateY(0);
+            padding: 2rem;
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close-analysis {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .close-analysis:hover {
+            background: #f0f0f0;
+        }
+
+        .hide-control {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .mini-hide {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 0.8em;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .good-example img {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            transition: transform 0.3s;
+        }
+
+        .good-example img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .good-comparison {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .good-caption {
+            font-size: 0.95em;
+            color: #666;
+            margin: 0.5rem 0 1.5rem;
+            padding: 0 1rem;
+            text-align: center;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <h1 class="main-title">Data Visualization Critique</h1>
+
+    <div class="container">
+        <!-- Example 1 -->
+        <div class="example-card">
+            <h2>Example 1: UK Temperature Data</h2>
+            
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <a href="https://www.statista.com/statistics/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk/" rel="nofollow">
+                        <img src="https://www.statista.com/graphic/1/322658/monthly-average-daily-temperatures-in-the-united-kingdom-uk.jpg" 
+                        alt="Statistic: Monthly average daily temperatures in the United Kingdom (UK) from January 2015 to November 2024 (in degrees Celsius) | Statista" 
+                        style="width: 100%; height: auto !important; max-width:1000px;-ms-interpolation-mode: bicubic;"/>
+                    </a><br />
+                    
+                    <div class="source-note">
+                        Source: <a href="https://www.statista.com" target="_blank">Statista</a>
+                    </div>
+                </div>
+
+                <div class="issue-flow">
+                    <button class="trigger-btn" data-example="1">Any issue? 👆</button>
+                    <div class="error-steps" id="example1-steps"></div>
+                </div>
+            </div>
+        
+            <div class="analysis-section" id="analysis1">
+                <div class="analysis-header">
+                    <h3>What - Why - How Analysis</h3>
+                    <button class="close-analysis" data-example="1">×</button>
+                </div>
+                <div class="what-why-how">
+                    <div>
+                        <h4>What (Data)</h4>
+                        <p>The dataset represents monthly average daily temperatures in the United Kingdom (UK) from January 2015 to November 2024.</p>
+                    </div>
+                    <div>
+                        <h4>Why (Task)</h4>
+                        <p>The primary objective is to analyze long-term temperature trends and seasonal variations in the UK.</p>
+                    </div>
+                    <div>
+                        <h4>How (Idiom)</h4>
+                        <p>Line chart to effectively display trends over time</p>
+                        <p>Cyclic color scale to distinguish years while maintaining consistency</p>  
+                        <p>Min-Max range shading to highlight variability and extreme values</p>
+                        <p>Heatmap to compactly visualize seasonal patterns across multiple years</p>
+                    </div>
+                </div>
+            </div>
+           
+            <button class="toggle-good" data-example="1">
+                Show Improved Visualization
+            </button>
+
+            <div class="good-example" id="good1">
+    <h3>Optimized Temperature Visualization</h3>
+    
+    <div class="good-comparison" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+        <div>
+            <h4 style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; text-align: left; width: fit-content; min-width: 50%;">1. Monthly Temperature Trends Visualization</h4>
+            <img src="https://raw.githubusercontent.com/carionb/IDV-assignment2/main/GOOD3.png" 
+                alt="Line chart using a cyclic color scale to highlight monthly temperature trends."
+                style="width: 80%; height: auto; display: block; margin: 0 auto; max-height: 500px; object-fit: contain;">
+            
+            <div class="source-note">
+                Source: <a href="https://github.com/carionb" target="_blank">Carionb</a>
+            </div>
+        </div>
+        
+        <div>
+            <h4 style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; text-align: left; width: fit-content; min-width: 50%;">2. Global Warming Trends Visualization</h4>
+            <img src="https://www.visualcapitalist.com/wp-content/uploads/2023/07/Evolution-of-Global-Temps_04.png" 
+                alt="Gradient temperature chart showing long-term warming trends and anomalies."
+                style="width: 65%; height: auto; display: block; margin: 0 auto; object-fit: contain;">
+
+            <div class="source-note">
+                Source: <a href="https://www.visualcapitalist.com" target="_blank">Visual Capitalist</a>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+        
+
+        <!-- Example 2 -->
+        <div class="example-card">
+            <h2>Example 2: Tableau Dashboard Design</h2>
+        
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <img src="https://lovelytics.com/wp-content/uploads/2022/08/6-Design-Tips_1.png" 
+                         alt="Poor Dashboard Design"
+                         style="width:100%; height:auto; object-fit: contain;">
+                    <div class="source-note">
+                        Source: <a href="https://lovelytics.com/6-design-tips-for-better-business-dashboards-in-tableau/" target="_blank">Lovelytics</a>
+                    </div>
+                </div>
+                <div class="issue-flow">
+                    <button class="trigger-btn" data-example="2">Any issue? 👆</button>
+                    <div class="error-steps" id="example2-steps"></div>
+                </div>
+            </div>
+
+            <div class="analysis-section" id="analysis2">
+                <div class="analysis-header">
+                    <h3>What - Why - How Analysis</h3>
+                    <button class="close-analysis" data-example="2">×</button>
+                </div>
+                <div class="what-why-how">
+                    <div>
+                        <h4>What (Data)</h4>
+                        <p>Superstore sales data, including sales, profits, customer types, and year-over-year comparisons.</p>
+                    </div>
+                    <div>
+                        <h4>Why (Task)</h4>
+                        <p>Provide actionable insights for performance optimization.</p>
+                    </div>
+                    <div>
+                        <h4>How (Idiom)</h4>     
+                        <p>Decluttered dashboard with a structured layout for better readability</p>
+                        <p>Direct labeling on charts to reduce reliance on separate legends</p>
+                        <p>Color-coded highlights to emphasize key insights without overwhelming the viewer</p>
+                        <p>Consistent fonts, spacing, and alignment to create a professional, easy-to-read interface</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="toggle-good" data-example="2">
+                Show Improved Visualization
+            </button>
+
+            <div class="good-example" id="good2">
+                <h3>Improved Dashboard Design</h3>
+                <img src="https://lovelytics.com/wp-content/uploads/2022/08/6-Design-Tips_2-1024x788.png" 
+                     alt="Improved Dashboard"
+                     style="width:100%; max-width:800px; height:auto;">
+                <div class="source-note">
+                Source: <a href="https://lovelytics.com" target="_blank">Lovelytics</a>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Baorong Li - 1009456
+    </footer>
+
+    <script>
+        const state = {
+            examples: {
+                1: {
+                    currentStep: 0,
+                    totalSteps: 3,
+                    errors: [
+                        { num: 1, desc: "10 distinct hues creating cognitive load" },
+                        { num: 2, desc: "Too dense bars affect readability" },
+                        { num: 3, desc: "Too difficult to observe long-term trends" }
+                    ]
+                },
+                2: {
+                    currentStep: 0,
+                    totalSteps: 3,
+                    errors: [
+                        { num: 1, desc: "Visual clutter with unnecessary elements" },
+                        { num: 2, desc: "Inconsistent color usage" },
+                        { num: 3, desc: "Poor alignment and spacing" }
+                    ]
+                }
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const target = e.target;
+            
+            // 处理问题显示按钮
+            if(target.classList.contains('trigger-btn')) {
+                const exampleId = target.dataset.example;
+                handleIssueFlow(exampleId, target);
+            }
+            
+            // 处理改进按钮
+            if(target.classList.contains('improve-flow-btn')) {
+                const exampleId = target.dataset.example;
+                toggleAnalysis(exampleId);
+            }
+            
+            // 处理关闭按钮
+            if(target.classList.contains('close-analysis')) {
+                const exampleId = target.dataset.example;
+                closeAnalysis(exampleId);
+            }
+            
+            // 处理可视化切换
+            if(target.classList.contains('toggle-good')) {
+                const exampleId = target.dataset.example;
+                toggleGoodExample(exampleId, target);
+            }
+        });
+
+        function handleIssueFlow(exampleId, button) {
+            const container = document.getElementById(`example${exampleId}-steps`);
+            const exampleState = state.examples[exampleId];
+            
+            if(exampleState.currentStep < exampleState.totalSteps) {
+                // 显示当前问题
+                const errorItem = document.createElement('div');
+                errorItem.className = 'error-item';
+                errorItem.innerHTML = `
+                    <span class="error-marker">${exampleState.errors[exampleState.currentStep].num}</span>
+                    ${exampleState.errors[exampleState.currentStep].desc}
+                `;
+                container.appendChild(errorItem);
+                errorItem.style.display = 'block';
+                
+                // 更新状态
+                exampleState.currentStep++;
+                
+                // 激活容器
+                container.style.display = 'block';
+
+                // 显示进度
+                button.textContent = `Issue ${exampleState.currentStep}/${exampleState.totalSteps}`;
+
+                // 显示完成状态
+                if(exampleState.currentStep === exampleState.totalSteps) {
+                    // 添加改进按钮
+                    const improveBtn = document.createElement('button');
+                    improveBtn.className = 'improve-flow-btn';
+                    improveBtn.textContent = 'How to Improve ▼';
+                    improveBtn.dataset.example = exampleId;
+                    improveBtn.style.display = 'block';
+                    container.appendChild(improveBtn);
+
+                    // 添加隐藏控制
+                    const hideBtn = document.createElement('button');
+                    hideBtn.className = 'mini-hide';
+                    hideBtn.textContent = '▲ Hide';
+                    hideBtn.onclick = () => resetIssues(exampleId);
+                    container.appendChild(hideBtn);
+
+                    button.disabled = true;
+                }
+            }
+        }
+
+        function toggleAnalysis(exampleId) {
+            const analysis = document.getElementById(`analysis${exampleId}`);
+            const btn = document.querySelector(`#example${exampleId}-steps .improve-flow-btn`);
+            
+            analysis.classList.toggle('active');
+            btn.textContent = analysis.classList.contains('active') 
+                ? 'Hide Analysis ▲' 
+                : 'How to Improve ▼';
+            
+            analysis.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function closeAnalysis(exampleId) {
+            const analysis = document.getElementById(`analysis${exampleId}`);
+            const btn = document.querySelector(`#example${exampleId}-steps .improve-flow-btn`);
+            analysis.classList.remove('active');
+            btn.textContent = 'How to Improve ▼';
+        }
+
+        function resetIssues(exampleId) {
+            const container = document.getElementById(`example${exampleId}-steps`);
+            const button = document.querySelector(`button[data-example="${exampleId}"].trigger-btn`);
+            
+            // 重置状态
+            state.examples[exampleId].currentStep = 0;
+            container.innerHTML = '';
+            container.style.display = 'none';
+            
+            // 重置按钮
+            button.textContent = 'Any issue? 👆';
+            button.disabled = false;
+            
+            // 关闭分析
+            closeAnalysis(exampleId);
+        }
+
+        function toggleGoodExample(exampleId, button) {
+    const goodExample = document.getElementById(`good${exampleId}`);
+    const isActive = goodExample.classList.toggle('active');
+    
+    // 更新按钮文本
+    button.textContent = isActive 
+        ? 'Hide Improved Visualization' 
+        : 'Show Improved Visualization';
+    
+    // 滚动到可见区域
+    if(isActive) {
+        setTimeout(() => {
+            goodExample.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start',
+                inline: 'nearest'
+            });
+        }, 300); 
+    }
+}
+    </script>
+</body>
+</html>
